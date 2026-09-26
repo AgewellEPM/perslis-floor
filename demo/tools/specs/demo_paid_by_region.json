@@ -1,0 +1,51 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": {
+      "Central": 11215.45,
+      "East": 21576.59,
+      "South": 4800.25,
+      "West": 32996.02
+    },
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "0ec85e5014e91d003ed93530d0f7cc5de3ec69fa67f50e86c05afa41acbaeb1f",
+    "independent_check": true,
+    "readback": "Take every row of invoices; keep rows where status is 'paid'; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.region; add up amount in each group (exactly).",
+    "spec_sha256": "d89f9a03c9cdf09fcea7cab8d5a7249463ce729ae4233aac145ade6691ecde84",
+    "warnings_acknowledged": []
+  },
+  "sig": "4ffd40c0019496f75744da890f8693a92a5b1a02d1c5241c69a472f9ac05720dcd384a76cef78e0725486a767e6c66f5446eff96a632eb6c6a70e1d931038b00",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "column": "status",
+        "equals": "paid",
+        "op": "filter"
+      },
+      {
+        "on": "vendor_id",
+        "op": "join",
+        "table": "vendors",
+        "to": "id"
+      },
+      {
+        "column": "vendors.region",
+        "op": "group_by"
+      },
+      {
+        "column": "amount",
+        "op": "sum"
+      }
+    ],
+    "question": "How much have we paid, by vendor region?",
+    "question_class": "demo:paid_by_region"
+  },
+  "table": "invoices"
+}

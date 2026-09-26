@@ -1,0 +1,36 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": 70588.31,
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
+    "independent_check": true,
+    "readback": "Take every row of invoices; keep rows where status is 'paid'; add up amount (exactly).",
+    "spec_sha256": "0cbf27f142a721cbb8dea38a68b4892d64715ebd561baf5ffd4ca121b1613b24",
+    "warnings_acknowledged": []
+  },
+  "sig": "df2687d819d43d08a399da87cb3ba6d761973840493f02be54bfcc26457cdda336b025d0e3eff4199c9f119f5c51923555cae3c52f6d46ea12696ca587cd910e",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "column": "status",
+        "equals": "paid",
+        "op": "filter"
+      },
+      {
+        "column": "amount",
+        "op": "sum"
+      }
+    ],
+    "question": "What is the total of all paid invoices?",
+    "question_class": "demo:paid_total"
+  },
+  "table": "invoices"
+}

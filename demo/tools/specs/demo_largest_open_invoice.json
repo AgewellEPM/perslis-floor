@@ -1,0 +1,36 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": 4901.45,
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
+    "independent_check": true,
+    "readback": "Take every row of invoices; keep rows where status is 'open'; take the largest amount.",
+    "spec_sha256": "759dc2fd8bb7da51c9866dafaaf8f13ee9525d95ad18e61dfd49a2ad7a168ddb",
+    "warnings_acknowledged": []
+  },
+  "sig": "08929bd66d41a18eec8d36e9d0ab6d6a7c90faf9e533f422dcdcb55ab1e92ccbab1ccd8749ee159fa4ffc8ec1ab7462410cdd6e3401241c11c133f07dc830006",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "column": "status",
+        "equals": "open",
+        "op": "filter"
+      },
+      {
+        "column": "amount",
+        "op": "max"
+      }
+    ],
+    "question": "What is our largest open invoice?",
+    "question_class": "demo:largest_open_invoice"
+  },
+  "table": "invoices"
+}

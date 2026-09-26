@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+tools/logs/
+tools/private/
+demo/tools/logs/
+demo/tools/private/

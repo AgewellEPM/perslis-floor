@@ -1,0 +1,14 @@
+Perslis Symbolic Floor — Runtime
+Copyright (c) 2026 AgewellEPM / Perslis Research
+
+Permission is granted to use this runtime, free of charge, to execute symbolic
+tools admitted by a Perslis floor, including for commercial purposes.
+
+You may not redistribute modified copies represented as the Perslis runtime,
+and you may not use it to represent that an unadmitted specification was
+admitted by Perslis.
+
+The Perslis admission gate is not included in this package and is not licensed
+here.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.

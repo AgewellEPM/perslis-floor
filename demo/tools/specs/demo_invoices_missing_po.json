@@ -1,0 +1,31 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": 7,
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
+    "independent_check": true,
+    "readback": "Take every row of invoices; count the rows with no po_number.",
+    "spec_sha256": "c938bad648735e39fe8603d2d0eadc413deecdda82d62680c693a2310d080d74",
+    "warnings_acknowledged": []
+  },
+  "sig": "ada3b876a8d4b4e78bc0cc8c213be2293a5be266004950e8ac365c7fcf3ebade5c0fc7100199330dd4d6c14f4ccd826db688ee95c68944921137bddf62466e08",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "column": "po_number",
+        "op": "count_missing"
+      }
+    ],
+    "question": "How many invoices have no PO number?",
+    "question_class": "demo:invoices_missing_po"
+  },
+  "table": "invoices"
+}

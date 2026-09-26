@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perslis Floor — exact answers from your own data, no model in the loop</title>
+<meta name="description" content="Ask a question about your data once. Get a signed tool your AI assistant can call forever — offline, free, exact, and it refuses instead of guessing. Python 3.9+, standard library only, MCP over stdio.">
+<meta property="og:title" content="Perslis Floor">
+<meta property="og:description" content="Exact answers from your own data, with no model in the loop. Signed tools that refuse instead of guessing.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://agewellepm.github.io/perslis-floor/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0e11;--panel:#15171c;--panel2:#1b1e24;--line:#2a2e36;--text:#ecebe6;--muted:#a3a39c;
+--dim:#6f7078;--gold:#e7b53c;--green:#7cc7a0;--red:#ef8a7c;--blue:#8fb6ff;--radius:14px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--gold);text-decoration:none}a:hover{text-decoration:underline}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav.top{position:sticky;top:0;z-index:5;background:rgba(13,14,17,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:600;color:var(--text);letter-spacing:.2px}.brand b{color:var(--gold)}
+nav.top .links a{color:var(--muted);margin-left:22px;font-size:14px}nav.top .links a:hover{color:var(--text)}
+header.hero{padding:72px 0 40px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:54px;line-height:1.06;margin:14px 0 18px;letter-spacing:-.5px}
+h2{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:36px;line-height:1.15;margin:0 0 14px}
+h3{margin:0 0 6px;font-size:17px}
+.dek{color:var(--muted);font-size:18px;max-width:560px}
+.install{margin:26px 0 18px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:600px}
+.install code{flex:1;font-size:13px;color:var(--text);overflow-x:auto;white-space:nowrap}
+button{font:inherit;cursor:pointer}
+.copy{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px}
+.copy:hover{border-color:var(--gold)}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:11px 18px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid var(--line);color:var(--text)}
+.btn.primary{background:var(--gold);color:#1a1405;border-color:var(--gold)}.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.console{background:#0a0b0e;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.console .bar{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim);font-family:"JetBrains Mono",monospace}
+.console .bar .live{color:var(--green)}
+.console pre{margin:0;padding:18px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#d6d4cc}
+.k{color:var(--blue)}.s{color:var(--green)}.n{color:var(--gold)}.d{color:var(--dim)}.r{color:var(--red)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 64px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.fact strong{display:block;font-size:22px;font-family:Newsreader,serif;font-weight:500}.fact span{color:var(--muted);font-size:14px}
+section{padding:56px 0;border-top:1px solid var(--line)}
+.lede{color:var(--muted);max-width:760px;font-size:17px}
+.demo{display:grid;grid-template-columns:320px 1fr;gap:20px;margin-top:26px}
+.qs{display:flex;flex-direction:column;gap:8px}
+.q{text-align:left;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:12px 14px;font-size:14.5px;line-height:1.4}
+.q:hover{border-color:#4a4f5a}.q[aria-pressed=true]{border-color:var(--gold);background:#1f1b10}
+.q small{display:block;color:var(--dim);font-size:12px;margin-top:3px;font-family:"JetBrains Mono",monospace}
+.breaks{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:8px}
+.breaks .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:8px;font-weight:600}
+.q.break[aria-pressed=true]{border-color:var(--red);background:#221413}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;min-height:420px}
+.panel .row{margin-bottom:16px}.panel .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;font-weight:600}
+.panel .ask{font-family:Newsreader,serif;font-size:24px;line-height:1.3}
+.panel .computes{color:var(--text);background:var(--panel2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 8px 8px 0}
+.panel pre{background:#0a0b0e;border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;white-space:pre-wrap;word-break:break-word;margin:0;max-height:340px;overflow:auto}
+.status{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:12px;padding:3px 8px;border-radius:6px;font-weight:500}
+.status.ok{background:#12291e;color:var(--green)}.status.no{background:#2c1614;color:var(--red)}.status.rec{background:#16233a;color:var(--blue)}
+.caption{color:var(--dim);font-size:13px;margin-top:12px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.step .num{font-family:"JetBrains Mono",monospace;color:var(--gold);font-size:13px}
+.step p{color:var(--muted);font-size:14.5px;margin:6px 0 0}
+.callout{margin-top:22px;background:#17150e;border:1px solid #3b3218;border-radius:var(--radius);padding:18px 20px;color:#d9d3bf}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}.card p{color:var(--muted);font-size:14.5px;margin:6px 0 0}
+pre.cmd{background:#0a0b0e;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:13px;overflow-x:auto;margin:14px 0}
+table{width:100%;border-collapse:collapse;margin-top:18px;font-size:15px}
+td,th{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}th{color:var(--dim);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.pill{display:inline-block;border:1px solid #5a4a1a;color:var(--gold);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;letter-spacing:.06em}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media (max-width:900px){header.hero{grid-template-columns:1fr;padding-top:44px}h1{font-size:40px}.demo{grid-template-columns:1fr}
+.facts,.steps,.grid3{grid-template-columns:1fr 1fr}nav.top .links a:not(.gh){display:none}}
+@media (max-width:560px){.facts,.steps,.grid3{grid-template-columns:1fr}h2{font-size:30px}}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Site"><div class="wrap"><a class="brand" href="#"><b>⬦</b> Perslis Floor</a>
+<div class="links"><a href="#try">Try it</a><a href="#how">How it works</a><a href="#verify">Verify</a><a href="#status">Status</a><a class="gh" href="https://github.com/AgewellEPM/perslis-floor">GitHub ↗</a></div></div></nav>
+
+<main class="wrap">
+<header class="hero">
+<div>
+<div class="eyebrow">Perslis Research · v1.1.0 · Pilot</div>
+<h1>Exact answers from your own data.<br>No model in the loop.</h1>
+<p class="dek">Ask a question about your data once. Get back a signed tool your AI assistant can call from then on. It runs offline and free, it's exact, and it <strong>refuses instead of guessing</strong>.</p>
+<div class="install"><code id="oneliner">curl -fsSL https://raw.githubusercontent.com/AgewellEPM/perslis-floor/main/install.sh | bash</code><button class="copy" data-copy="oneliner">Copy</button></div>
+<div class="cta"><a class="btn primary" href="https://github.com/AgewellEPM/perslis-floor/releases/latest">Download v1.1.0</a><a class="btn" href="https://github.com/AgewellEPM/perslis-floor">Source on GitHub</a><a class="btn" href="https://perslis.com/contact.html">Tools for your data ↗</a></div>
+</div>
+<div class="console" aria-label="Recorded MCP exchange"><div class="bar"><span>claude ⟷ perslis-floor (MCP stdio)</span><span class="live">● recorded</span></div><pre id="hero-console"></pre></div>
+</header>
+
+<div class="facts">
+<div class="fact"><strong>0</strong><span>model calls per answer</span></div>
+<div class="fact"><strong>0</strong><span>dependencies: standard library only</span></div>
+<div class="fact"><strong>0</strong><span>lines of network code</span></div>
+<div class="fact"><strong>Exact</strong><span>decimal arithmetic, no floats</span></div>
+</div>
+
+<section id="try">
+<div class="eyebrow">Try it</div>
+<h2>Six questions. Four ways to break it.</h2>
+<p class="lede">These are the demo tools that ship in the download, over fictional invoices and vendors. Pick a question to see what the tool computes and the exact answer the runtime returned. Then try to break it.</p>
+<div class="demo">
+<div class="qs" id="qs" role="group" aria-label="Demo questions"></div>
+<div class="panel" id="panel" aria-live="polite"></div>
+</div>
+<p class="caption">Every output on this page was recorded on 2026-09-26 from the real v1.1.0 release, over MCP stdio. Nothing was typed by hand. Run <code>python3 floor-serve.py --data demo/data --tools demo/tools --check</code> to reproduce it.</p>
+</section>
+
+<section id="how">
+<div class="eyebrow">How it works</div>
+<h2>A model proposes. The floor checks. A person approves. You run it.</h2>
+<div class="steps">
+<div class="step"><div class="num">01 · SPEC</div><h3>A model writes a spec, never code</h3><p>It composes a pipeline from a closed vocabulary, such as <code>rows → filter → join → group_by → sum</code>. There's no way out into Python.</p></div>
+<div class="step"><div class="num">02 · GATE</div><h3>Eight checks prove it</h3><p>Columns exist, the data supports an exact answer, and the result is deterministic. The verifier rejects near-misses, the spec abstains without evidence, and the answer moves when the data moves.</p></div>
+<div class="step"><div class="num">03 · REVIEW</div><h3>A person approves it</h3><p>The reviewer reads what the tool computes in plain words, next to its answer on the real data, plus any warnings. The approval is signed into the tool.</p></div>
+<div class="step"><div class="num">04 · RUN</div><h3>It runs on your machine</h3><p>Ed25519-signed and served over MCP. Every answer carries its derivation and <code>model_calls: 0</code>.</p></div>
+</div>
+<div class="callout"><strong>Why a person, and not just the gate?</strong> The gate can prove a spec is <em>correct as written</em>. It can't prove the spec <em>means what the question means</em>: a spec for "total paid" that filters <code>status == 'open'</code> passes every mechanical check. So nothing ships until someone reads what it computes, next to its answer, and says yes. Editing the spec afterwards voids that approval.</div>
+</section>
+
+<section id="refuses">
+<div class="eyebrow">What it will not do</div>
+<h2>It fails closed.</h2>
+<div class="grid3">
+<div class="card"><h3>Guess</h3><p>No evidence gives <code>NO_EVIDENCE</code>, and no matching rows gives <code>NO_VALUE</code>. It never fills the gap with a plausible number.</p></div>
+<div class="card"><h3>Skip what it can't read</h3><p><code>N/A</code> in a number column, <code>03/04/2026</code> in a date column, a corrupt JSON row, or a file still being written: each is refused by name, never silently dropped.</p></div>
+<div class="card"><h3>Undercount or double-count</h3><p>A lookup key that appears twice would double-count, and a row with no match would vanish from a total. Both are refused unless the tool explicitly (and signed) says otherwise.</p></div>
+<div class="card"><h3>Run a tool nobody admitted</h3><p>The runtime holds only public keys, so it can check signatures but can't create them. An edited tool is refused by name, and the rest keep working.</p></div>
+<div class="card"><h3>Round a total</h3><p>Totals, minimums and maximums are exact decimals: <code>9007199254740992 + 1 = 9007199254740993</code>. Only an average rounds, to 10 places, and the tool says so.</p></div>
+<div class="card"><h3>Phone home</h3><p>There is no network code. Shareable logs record which tools ran and why a call was refused, with no values and no question text. Your questions stay in <code>tools/private/</code>.</p></div>
+</div>
+</section>
+
+<section id="verify">
+<div class="eyebrow">Verify everything</div>
+<h2>Don't take our word for it.</h2>
+<p class="lede">Releases are signed with a Perslis release key. The same public key is pinned here, in the GitHub README and at <a href="https://perslis.com/perslis-floor.html">perslis.com</a>. Compare them: a key published in only one place proves nothing.</p>
+<pre class="cmd"><span class="d"># the release key (identical on perslis.com and GitHub)</span>
+echo 'releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd' &gt; perslis_signers
+
+<span class="d"># 1. the checksums really come from Perslis</span>
+ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig &lt; SHA256SUMS
+
+<span class="d"># 2. the zip matches the checksums; every file inside matches the manifest</span>
+shasum -a 256 -c SHA256SUMS
+unzip perslis-floor-1.1.0.zip &amp;&amp; cd perslis-floor-1.1.0 &amp;&amp; shasum -a 256 -c MANIFEST.sha256
+
+<span class="d"># 3. there is no network code</span>
+grep -rnE "socket|urllib|http|requests" floor_runtime/   <span class="d"># finds nothing</span></pre>
+<p class="caption">Builds are reproducible byte for byte: the same sources produce the same SHA-256.</p>
+</section>
+
+<section id="status">
+<div class="eyebrow">Status</div>
+<h2>Pilot, honestly.</h2>
+<p class="lede"><span class="pill">PILOT · v1.1.0</span> It's tested end to end, including a real MCP client calling a built kit, on Python 3.9 (the macOS default) and 3.13.</p>
+<table>
+<thead><tr><th>Measured</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Load 500k rows (18 MB CSV)</td><td>≈ 1.3 s, ≈ 400 MB RAM (M-series laptop)</td></tr>
+<tr><td>First query after the data changes</td><td>≈ 2.3 s at 500k rows; repeat answers are cached until the file changes</td></tr>
+<tr><td>Admitting one spec (authoring side)</td><td>≈ 27 s at 500k rows</td></tr>
+</tbody></table>
+<table>
+<thead><tr><th>Not yet</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td>Relative dates ("last 30 days")</td><td>They make the answer depend on the clock. Absolute date ranges work.</td></tr>
+<tr><td>Parameterised tools</td><td>It's one tool per question for now; "total for vendor X" needs a tool per X.</td></tr>
+<tr><td>More than 1M rows in memory</td><td>That's the default cap; <code>--max-rows</code> raises it. Export a narrower slice for bigger data.</td></tr>
+<tr><td>Direct database connections</td><td>Deliberately left out (no network). Export to CSV or SQLite instead.</td></tr>
+</tbody></table>
+</section>
+
+<section id="pilot">
+<div class="eyebrow">Tools for your data</div>
+<h2>Send an export and your questions. Get back a kit.</h2>
+<p class="lede">The admission gate and the signing keys stay at Perslis. A wrong spec that got signed would answer confidently, offline and forever, so the part that decides stays where it can be maintained. You send an export (CSV, JSON or SQLite) and your questions in your own words. We build each tool, review it and sign it. You get this runtime, your tools and a five-minute guide. Questions that need judgment rather than arithmetic come back marked as needing a model, never as a guess.</p>
+<div class="cta" style="margin-top:18px"><a class="btn primary" href="https://perslis.com/contact.html">Start a pilot ↗</a><a class="btn" href="https://perslis.com/perslis-floor.html">Read more on perslis.com</a></div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>⬦ Perslis Research · Perslis Floor v1.1.0 · source-available, free to use including commercially</span><span><a href="https://github.com/AgewellEPM/perslis-floor">GitHub</a> · <a href="https://perslis.com">perslis.com</a></span></div></footer>
+
+<script>
+const DATA = {"demo": [{"q": "How much have we paid, by vendor region?", "tool": "derive_demo_paid_by_region", "computes": "Take every row of invoices; keep rows where status is 'paid'; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.region; add up amount in each group (exactly).", "result": {"status": "DERIVED", "tool": "derive_demo_paid_by_region", "table": "invoices", "question_class": "demo:paid_by_region", "value": {"Central": 11215.45, "East": 21576.59, "South": 4800.25, "West": 32996.02}, "model_calls": 0, "derivation": "rows -> filter(status equals 'paid') -> join(vendors on vendor_id=id) -> group_by(vendors.region) -> sum(amount)"}}, {"q": "Who are our top 3 vendors by total invoiced?", "tool": "derive_demo_top_vendors_by_invoiced", "computes": "Take every row of invoices; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.name; add up amount in each group (exactly); keep the top 3 groups, highest first (groups tied at the cutoff are all kept).", "result": {"status": "DERIVED", "tool": "derive_demo_top_vendors_by_invoiced", "table": "invoices", "question_class": "demo:top_vendors_by_invoiced", "value": [["Harbor Tool Co", 36308.95], ["Northgate Electric", 21489.58], ["Blue Mesa Freight", 18941.9]], "model_calls": 0, "derivation": "rows -> join(vendors on vendor_id=id) -> group_by(vendors.name) -> sum(amount) -> top(3, desc, ties kept)"}}, {"q": "What is the total of all paid invoices?", "tool": "derive_demo_paid_total", "computes": "Take every row of invoices; keep rows where status is 'paid'; add up amount (exactly).", "result": {"status": "DERIVED", "tool": "derive_demo_paid_total", "table": "invoices", "question_class": "demo:paid_total", "value": 70588.31, "model_calls": 0, "derivation": "rows -> filter(status equals 'paid') -> sum(amount)"}}, {"q": "How many invoices were issued each month?", "tool": "derive_demo_invoices_per_month", "computes": "Take every row of invoices; group by month of issued_on; count the rows in each group.", "result": {"status": "DERIVED", "tool": "derive_demo_invoices_per_month", "table": "invoices", "question_class": "demo:invoices_per_month", "value": {"2026-01": 6, "2026-02": 6, "2026-03": 4, "2026-04": 8, "2026-05": 3, "2026-06": 2, "2026-07": 7, "2026-08": 7, "2026-09": 5}, "model_calls": 0, "derivation": "rows -> group_by(issued_on by month) -> count"}}, {"q": "What is our largest open invoice?", "tool": "derive_demo_largest_open_invoice", "computes": "Take every row of invoices; keep rows where status is 'open'; take the largest amount.", "result": {"status": "DERIVED", "tool": "derive_demo_largest_open_invoice", "table": "invoices", "question_class": "demo:largest_open_invoice", "value": 4901.45, "model_calls": 0, "derivation": "rows -> filter(status equals 'open') -> max(amount)"}}, {"q": "How many invoices have no PO number?", "tool": "derive_demo_invoices_missing_po", "computes": "Take every row of invoices; count the rows with no po_number.", "result": {"status": "DERIVED", "tool": "derive_demo_invoices_missing_po", "table": "invoices", "question_class": "demo:invoices_missing_po", "value": 7, "model_calls": 0, "derivation": "rows -> count_missing(po_number)"}}], "breaks": [{"id": "tamper", "title": "Someone edits a signed tool", "action": "In demo_paid_total.json, change the filter from 'paid' to 'open'.", "command": "python3 floor-serve.py --data demo/data --tools edited-tools --list", "output": "refused: demo_paid_total.json: SignatureError: 'demo:paid_total': signature does not match — the spec was edited after admission, or not admitted at all\n\nderive_demo_invoices_missing_po\n    question   : How many invoices have no PO number?\n    computes   : Take every row of invoices; count the rows with no po_number.\n    reviewed by: Perslis (demo)\nderive_demo_invoices_per_month\n    question   : How many invoices were issued each month?\n    computes   : Take every row of invoices; group by month of issued_on; count the rows in each group.\n    reviewed by: Perslis (demo)\nderive_demo_largest_open_invoice\n    question   : What is our largest open invoice?\n    computes   : Take every row of invoices; keep rows where status is 'open'; take the largest amount.\n    reviewed by: Perslis (demo)\nderive_demo_paid_by_region\n    question   : How much have we paid, by vendor region?\n    computes   : Take every row of invoices; keep rows where status is 'paid'; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.region; add up amount in each group (exactly).\n    reviewed by: Perslis (demo)\nderive_demo_top_vendors_by_invoiced\n    question   : Who are our top 3 vendors by total invoiced?\n    computes   : Take every row of invoices; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.name; add up amount in each group (exactly); keep the top 3 groups, highest first (groups tied at the cutoff are all kept).\n    reviewed by: Perslis (demo)"}, {"id": "na", "title": "A number column holds 'N/A'", "action": "Append an invoice whose amount is N/A.", "call": {"tool": "derive_demo_paid_total", "arguments": {}, "result": {"status": "REFUSED", "tool": "derive_demo_paid_total", "table": "invoices", "reason": "the data cannot support a checked answer: 1 value(s) in 'amount' are not numbers: 'N/A'"}}}, {"id": "orphan", "title": "An invoice points at an unknown vendor", "action": "Append a paid invoice for vendor V99, which is not in vendors.csv.", "call": {"tool": "derive_demo_paid_by_region", "arguments": {}, "result": {"status": "REFUSED", "tool": "derive_demo_paid_by_region", "table": "invoices", "reason": "the data cannot support a checked answer: 1 row(s) have no matching vendors.id — this tool refuses rather than silently leaving them out (keys: 'V99')"}}}, {"id": "gap", "title": "A question no tool answers", "action": "The assistant is asked for the churn rate and calls report_gap.", "call": {"tool": "report_gap", "arguments": {"question": "What is our customer churn rate?"}, "result": {"status": "RECORDED", "note": "saved on this machine only; no tool answers this yet"}}}], "recorded": "2026-09-26", "version": "1.1.0"};
+const $ = (s) => document.querySelector(s);
+function el(tag, cls, text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function statusPill(s){const p=el("span","status "+(s==="DERIVED"?"ok":s==="RECORDED"?"rec":"no"),s);return p;}
+function jsonText(o){return JSON.stringify(o,null,1).replace(/\n\s*/g," ").replace(/\[ /g,"[").replace(/ \]/g,"]");}
+function row(label, node){const r=el("div","row");r.appendChild(el("div","lbl",label));r.appendChild(node);return r;}
+function showDemo(d){
+  const p=$("#panel");p.replaceChildren();
+  p.appendChild(row("You ask", el("div","ask","“"+d.q+"”")));
+  p.appendChild(row("Your assistant calls", el("div","mono",d.tool+"  (no arguments)")));
+  p.appendChild(row("What it computes, exactly", el("div","computes",d.computes)));
+  const ans=el("div");ans.appendChild(statusPill(d.result.status));
+  const pre=el("pre",null,JSON.stringify(d.result,null,2));pre.style.marginTop="8px";ans.appendChild(pre);
+  p.appendChild(row("The runtime returned", ans));
+}
+function showBreak(b){
+  const p=$("#panel");p.replaceChildren();
+  p.appendChild(row("Break it", el("div","ask",b.title)));
+  p.appendChild(row("What we did", el("div",null,b.action)));
+  if(b.output){p.appendChild(row("$ "+b.command, el("pre",null,b.output)));}
+  else{const ans=el("div");ans.appendChild(statusPill(b.call.result.status));
+    const pre=el("pre",null,JSON.stringify(b.call.result,null,2));pre.style.marginTop="8px";ans.appendChild(pre);
+    p.appendChild(row("The runtime returned", ans));}
+}
+function select(btn){document.querySelectorAll(".q").forEach(b=>b.setAttribute("aria-pressed","false"));btn.setAttribute("aria-pressed","true");}
+const qs=$("#qs");
+DATA.demo.forEach((d,i)=>{const b=el("button","q");b.setAttribute("aria-pressed","false");b.appendChild(document.createTextNode(d.q));
+  b.appendChild(el("small",null,d.tool));b.onclick=()=>{select(b);showDemo(d);};qs.appendChild(b);if(i===0){select(b);showDemo(d);}});
+const br=el("div","breaks");br.appendChild(el("div","label","Now break it"));
+DATA.breaks.forEach(x=>{const b=el("button","q break",x.title);b.setAttribute("aria-pressed","false");b.onclick=()=>{select(b);showBreak(x);};br.appendChild(b);});
+qs.appendChild(br);
+// hero console: one recorded exchange, highlighted
+(function(){const d=DATA.demo[0];const c=$("#hero-console");
+  const parts=[["d","# you: "],["s",d.q+"\n\n"],["d","→ tools/call "],["k",d.tool+"\n\n"],["d","← "],
+   ["n",JSON.stringify({status:d.result.status,value:d.result.value,model_calls:d.result.model_calls},null,1).replace(/\n\s*/g," ")+"\n\n"],
+   ["d","derivation: "],[null,d.result.derivation]];
+  parts.forEach(([cls,t])=>{const s=el("span",cls,t);c.appendChild(s);});})();
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",()=>{
+  const t=document.getElementById(b.dataset.copy).textContent;
+  navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1400);});}));
+</script>
+</body>
+</html>

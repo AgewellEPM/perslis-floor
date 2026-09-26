@@ -1,0 +1,45 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": {
+      "2026-01": 6,
+      "2026-02": 6,
+      "2026-03": 4,
+      "2026-04": 8,
+      "2026-05": 3,
+      "2026-06": 2,
+      "2026-07": 7,
+      "2026-08": 7,
+      "2026-09": 5
+    },
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
+    "independent_check": true,
+    "readback": "Take every row of invoices; group by month of issued_on; count the rows in each group.",
+    "spec_sha256": "f2ce07133dafe5e15cf0d5b835f64abddbaf246dab86bb0fa74ed10b91f1a522",
+    "warnings_acknowledged": []
+  },
+  "sig": "a63f5772d3a84b0961858deddf7de48f66e7f65016d4c46258fb2cc4425f06b014416ee47118b18881161fe1811b398e718bdfcbd828d9be1b27127e7a3ff002",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "bucket": "month",
+        "column": "issued_on",
+        "op": "group_by"
+      },
+      {
+        "op": "count"
+      }
+    ],
+    "question": "How many invoices were issued each month?",
+    "question_class": "demo:invoices_per_month"
+  },
+  "table": "invoices"
+}

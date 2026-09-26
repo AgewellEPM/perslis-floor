@@ -1,0 +1,58 @@
+{
+  "format": "perslis-floor-spec/1",
+  "issued_at": "2026-09-26",
+  "issued_to": "public demo",
+  "kid": "perslis-floor-2026-09",
+  "review": {
+    "answer_on_evidence": [
+      [
+        "Harbor Tool Co",
+        36308.95
+      ],
+      [
+        "Northgate Electric",
+        21489.58
+      ],
+      [
+        "Blue Mesa Freight",
+        18941.9
+      ]
+    ],
+    "at": "2026-09-26T23:29:07+00:00",
+    "by": "Perslis (demo)",
+    "evidence_sha256": "0ec85e5014e91d003ed93530d0f7cc5de3ec69fa67f50e86c05afa41acbaeb1f",
+    "independent_check": true,
+    "readback": "Take every row of invoices; look up each row's vendor_id in vendors.id (every row must match, or the tool refuses); group by vendors.name; add up amount in each group (exactly); keep the top 3 groups, highest first (groups tied at the cutoff are all kept).",
+    "spec_sha256": "0aef4e5e84676e69a470f8c2fe35ae16556fea0b84e468e99d6b40c08d1bce29",
+    "warnings_acknowledged": []
+  },
+  "sig": "0448b6a50efcf15d5bebc1a611019d46c3f455caf4df313c4ff320e31948e7da04c54ea7071a0791fbbeb3c8ec5db8db2e436dd955475379e6e378ab0548660a",
+  "spec": {
+    "pipeline": [
+      {
+        "op": "rows"
+      },
+      {
+        "on": "vendor_id",
+        "op": "join",
+        "table": "vendors",
+        "to": "id"
+      },
+      {
+        "column": "vendors.name",
+        "op": "group_by"
+      },
+      {
+        "column": "amount",
+        "op": "sum"
+      },
+      {
+        "n": 3,
+        "op": "top"
+      }
+    ],
+    "question": "Who are our top 3 vendors by total invoiced?",
+    "question_class": "demo:top_vendors_by_invoiced"
+  },
+  "table": "invoices"
+}
