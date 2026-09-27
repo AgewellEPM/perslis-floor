@@ -14,6 +14,8 @@ can't support an exact answer, it **refuses rather than guessing**.
 ![MCP](https://img.shields.io/badge/MCP-stdio-8a63d2)
 ![Status](https://img.shields.io/badge/status-1.1.0%20%C2%B7%20pilot-e0a800)
 
+English · [中文](README.zh.md)
+
 </div>
 
 ---
