@@ -44,7 +44,9 @@ def _csv_rows(path: Path) -> list:
             delim = "\t"
         else:
             delim = ";" if head.count(";") > head.count(",") else ","
-        reader = csv.reader(fh, delimiter=delim)
+        # strict: an unterminated quote (a file cut off mid-write) is an error,
+        # not a field that silently swallows the rest of the file.
+        reader = csv.reader(fh, delimiter=delim, strict=True)
         try:
             header = next(reader)
         except StopIteration:
@@ -62,11 +64,12 @@ def _csv_rows(path: Path) -> list:
             if any("\x00" in c for c in cells):      # py<3.11 raises, newer passes it
                 raise LoadError(f"{path.name}: line {n} contains NUL bytes — "
                                 f"not a text export")
-            if len(cells) > len(header):
+            if len(cells) != len(header):
+                # A short row is usually a truncated export, not missing values:
+                # refuse it rather than count it with blanks.
                 raise LoadError(f"{path.name}: line {n} has {len(cells)} cells, "
-                                f"header has {len(header)}")
-            rows.append({h: (cells[i] if i < len(cells) else None)
-                         for i, h in enumerate(header)})
+                                f"header has {len(header)} — the file may be truncated")
+            rows.append(dict(zip(header, cells)))
         return rows
 
 

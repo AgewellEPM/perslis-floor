@@ -10,7 +10,11 @@
       "South": 4800.25,
       "West": 32996.02
     },
-    "at": "2026-09-26T23:29:07+00:00",
+    "at": "2026-09-27T00:46:44+00:00",
+    "attestation": {
+      "reviewer": "perslis-demo",
+      "sig": "dd10a8916b3336728037e5730522a5dc41e4bf6b1cd7d4228076382ba8fb0374f42e098ef9725318c7cefe6cfe29a56cacaa5bcf4864a518746d4923a8cbe507"
+    },
     "by": "Perslis (demo)",
     "evidence_sha256": "0ec85e5014e91d003ed93530d0f7cc5de3ec69fa67f50e86c05afa41acbaeb1f",
     "independent_check": true,
@@ -18,7 +22,7 @@
     "spec_sha256": "d89f9a03c9cdf09fcea7cab8d5a7249463ce729ae4233aac145ade6691ecde84",
     "warnings_acknowledged": []
   },
-  "sig": "4ffd40c0019496f75744da890f8693a92a5b1a02d1c5241c69a472f9ac05720dcd384a76cef78e0725486a767e6c66f5446eff96a632eb6c6a70e1d931038b00",
+  "sig": "6439e9330a705c6fbbd21e2c93cdcda24c76b2fead68a026a6448e3c582369ecccb29cf3afdc59f92f5900a5b67a6fac50d75d20c5145fe2d89f366e2ff0c703",
   "spec": {
     "pipeline": [
       {

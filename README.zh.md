@@ -15,23 +15,28 @@
 
 ## 安装
 
-**一行命令**：下载签名的发行版，验证后解压到 `~/perslis-floor`，并运行演示：
+**经过验证的安装**：在签名核对通过之前，不运行任何代码。先下载安装脚本与签名的校验和，用 Perslis 发布密钥验证，再运行安装脚本；安装脚本会下载压缩包、再次验证、解压到 `~/perslis-floor` 并运行演示：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AgewellEPM/perslis-floor/main/install.sh | bash
-```
-
-**或手动安装**：从[最新发行版](https://github.com/AgewellEPM/perslis-floor/releases/latest)下载
-`perslis-floor-1.1.0.zip`、`SHA256SUMS` 和 `SHA256SUMS.sig`，解压前先验证：
-
-```bash
+V=1.1.1; B=https://github.com/AgewellEPM/perslis-floor/releases/download/v$V
+curl -fsSL -O "$B/install.sh" -O "$B/SHA256SUMS" -O "$B/SHA256SUMS.sig"
 echo 'releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd' > perslis_signers
 ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
-shasum -a 256 -c SHA256SUMS
-unzip perslis-floor-1.1.0.zip && cd perslis-floor-1.1.0
+grep ' install.sh$' SHA256SUMS | shasum -a 256 -c -
+bash install.sh
 ```
 
-同一把发布公钥也公布在 [perslis.com/perslis-floor](https://perslis.com/perslis-floor.zh.html)。请对照两处：只出现在一个地方的密钥证明不了任何事。
+我们不提供 `curl … | bash` 形式的命令：从某个分支直接管道执行脚本，会在任何验证之前就运行该分支上的内容。
+
+**或手动安装**：从[最新发行版](https://github.com/AgewellEPM/perslis-floor/releases/latest)下载 `perslis-floor-1.1.1.zip`、`SHA256SUMS` 与 `SHA256SUMS.sig`，验证后再解压：
+
+```bash
+ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
+grep ' perslis-floor-1.1.1.zip$' SHA256SUMS | shasum -a 256 -c -
+unzip perslis-floor-1.1.1.zip && cd perslis-floor-1.1.1
+```
+
+同一把发布公钥也公布在 [perslis.com/perslis-floor](https://perslis.com/perslis-floor.zh)。请对照两处：只出现在一个地方的密钥证明不了任何事。
 压缩包内每个文件都列在 `MANIFEST.sha256` 中（`shasum -a 256 -c MANIFEST.sha256`）。
 
 ## 60 秒演示
@@ -65,7 +70,7 @@ Claude 调用工具，得到精确答案，以及生成它的计算流程：
 
 1. **模型编写规格，而非代码。** 它从封闭的词汇表中组合流水线：`rows → filter → join → group_by → sum`。没有通往 Python 的逃生口。
 2. **准入关卡证明它。** 列真实存在；数据足以支撑精确答案；结果确定；验证器必须*拒绝*错误答案；无证据时弃权；数据变化时答案随之变化——因此不可能是模型记住的常数。
-3. **由人批准。** 关卡能证明规格“按其写法”是正确的，却无法证明它“表达的正是问题的含义”（一个“已付款总额”却筛选 `status == 'open'` 的规格能通过所有机械检查）。因此审核人会阅读工具计算内容的文字说明及其在真实数据上的答案，然后才签名；这份批准记录在工具内部。
+3. **由人批准。** 关卡能证明规格“按其写法”是正确的，却无法证明它“表达的正是问题的含义”（一个“已付款总额”却筛选 `status == 'open'` 的规格能通过所有机械检查）。因此审核人会阅读工具计算内容的文字说明及其在真实数据上的答案；这份批准由审核人自己的密钥签名，运行时会拒绝任何缺少有效批准的工具。
 4. **在你的机器上运行。** 运行时验证 Ed25519 签名，并通过 MCP 提供工具。每个答案都带有 `model_calls: 0` 与推导过程。
 
 ## 它不会做什么
@@ -83,7 +88,7 @@ Claude 调用工具，得到精确答案，以及生成它的计算流程：
 
 ## 状态
 
-**试点版 · 1.1.0。** 在 Python 3.9（macOS 默认版本）与 3.13 上端到端测试，包括真实 MCP 客户端调用构建好的工具包。
+**试点版 · 1.1.1。** 在 Python 3.9（macOS 默认版本）与 3.13 上端到端测试，包括真实 MCP 客户端调用构建好的工具包。
 在 M 系列笔记本上以 50 万行（18 MB CSV）实测：加载约 1.3 秒，内存约 400 MB，数据变化后的首次查询约 2.3 秒，重复查询即时返回。
 已知限制：不支持相对日期（“最近 30 天”）；不支持带参数的工具（每个问题一个工具）；数据在内存中处理，默认上限 100 万行；不直接连接数据库——请导出为 CSV 或 SQLite。
 

@@ -5,7 +5,11 @@
   "kid": "perslis-floor-2026-09",
   "review": {
     "answer_on_evidence": 4901.45,
-    "at": "2026-09-26T23:29:07+00:00",
+    "at": "2026-09-27T00:46:44+00:00",
+    "attestation": {
+      "reviewer": "perslis-demo",
+      "sig": "1785d752862ab0aa4da2a43ce6dd869a73b0270d7c144142cb1df9c23dd60c21dc7c7531e571a8c3485b72e3abfdd29d2167c5c103efb400a6b8efc65e99e207"
+    },
     "by": "Perslis (demo)",
     "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
     "independent_check": true,
@@ -13,7 +17,7 @@
     "spec_sha256": "759dc2fd8bb7da51c9866dafaaf8f13ee9525d95ad18e61dfd49a2ad7a168ddb",
     "warnings_acknowledged": []
   },
-  "sig": "08929bd66d41a18eec8d36e9d0ab6d6a7c90faf9e533f422dcdcb55ab1e92ccbab1ccd8749ee159fa4ffc8ec1ab7462410cdd6e3401241c11c133f07dc830006",
+  "sig": "a0379d79f01e5214d97deef9b6e15d8835ac38d60fd2c685b531b2b48557b3a017d8607ff10469c5e77eb614e0ae1a925bb3960802501f9547e876c32d122702",
   "spec": {
     "pipeline": [
       {

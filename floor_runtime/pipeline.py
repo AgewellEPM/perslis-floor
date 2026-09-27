@@ -167,6 +167,17 @@ def parse_date(v):
         return None
 
 
+def exact_str(d: Decimal) -> str:
+    """Exact plain rendering of a finite Decimal, trailing zeros trimmed.
+
+    Never Decimal.normalize(): it rounds to the AMBIENT context precision
+    (28 digits by default), which silently changed a valid 32-digit value."""
+    s = format(d, "f")                    # exact, context-independent
+    if "." in s:
+        s = s.rstrip("0").rstrip(".")
+    return "0" if s in ("-0", "") else s
+
+
 def text(v) -> str:
     """Canonical text for equality, grouping and join keys."""
     if v is None:
@@ -174,7 +185,7 @@ def text(v) -> str:
     if isinstance(v, bool):
         return "true" if v else "false"
     if isinstance(v, Decimal) and v.is_finite():
-        return str(int(v)) if v == v.to_integral_value() else format(v.normalize(), "f")
+        return exact_str(v)
     if isinstance(v, float) and math.isfinite(v) and v.is_integer():
         return str(int(v))
     return str(v).strip()
@@ -188,10 +199,10 @@ def to_plain(v):
     if isinstance(v, list):
         return [to_plain(x) for x in v]
     if isinstance(v, Decimal):
-        if v == v.to_integral_value():
+        if v == v.to_integral_value(rounding=decimal.ROUND_DOWN):
             return int(v)
         f = float(v)
-        return f if math.isfinite(f) and Decimal(repr(f)) == v else format(v.normalize(), "f")
+        return f if math.isfinite(f) and Decimal(repr(f)) == v else exact_str(v)
     return v
 
 
@@ -482,7 +493,11 @@ def _group(rows: list, step: dict) -> list:
     else:
         for r in rows:
             v = r.get(col)
-            groups.setdefault(MISSING_GROUP if missing(v) else text(v), []).append(r)
+            key = MISSING_GROUP if missing(v) else text(v)
+            if key == MISSING_GROUP and not missing(v):
+                raise DataError(f"a real value in '{col}' is literally {MISSING_GROUP!r}, the "
+                                f"label for rows with no value — the two groups would merge")
+            groups.setdefault(key, []).append(r)
     return sorted(groups.items())
 
 
@@ -508,7 +523,7 @@ def _reduce(rows: list, step: dict):
         total = exact_sum(vals, col)
         mean = _ROUNDING.divide(total, Decimal(len(vals))).quantize(
             _MEAN_QUANTUM, context=_ROUNDING)
-        return _within_policy(mean.normalize() if mean == 0 else mean, col, "mean")
+        return _within_policy(mean, col, "mean")
     return max(vals) if op == "max" else min(vals)
 
 

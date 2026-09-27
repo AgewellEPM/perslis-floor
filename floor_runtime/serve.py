@@ -26,7 +26,7 @@ from .data import DataSource, LoadError
 from .journal import Journal
 from .explain import explain
 from .pipeline import DataError, PipelineError, describe, run, to_plain, validate
-from .signing import SignatureError, require
+from .signing import SignatureError, require, require_review
 
 PROTOCOLS = ("2025-06-18", "2025-03-26", "2024-11-05")
 GAP_TOOL = "report_gap"
@@ -98,15 +98,19 @@ GAP_SPEC = {
                     "required": ["question"]}}
 
 
-def load_tools(tools_dir, trusted: dict | None = None) -> tuple[list, list]:
-    """(tools, refusals). A spec loads whole or not at all."""
+def load_tools(tools_dir, trusted: dict | None = None,
+               reviewers: dict | None = None) -> tuple[list, list]:
+    """(tools, refusals). A spec loads whole or not at all: it must be signed by
+    a trusted key AND carry a signed approval from an enrolled reviewer."""
     d = Path(tools_dir) / "specs"
     tools, refused, seen = [], [], set()
     if not d.is_dir():
         return tools, [f"no specs directory at {d}"]
     for path in sorted(d.glob("*.json")):
         try:
-            tool = Tool(require(json.loads(path.read_text()), trusted))
+            envelope = require(json.loads(path.read_text()), trusted)
+            require_review(envelope, reviewers)
+            tool = Tool(envelope)
             if tool.name in seen:
                 raise PipelineError(f"duplicate tool name {tool.name}")
             seen.add(tool.name)

@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.1.1 — 2026-09-26 · PILOT (security and correctness)
+
+Found by an adversarial review of 1.1.0; each is pinned by a regression test.
+
+- **Exactness:** values of 29–38 significant digits were rounded on output,
+  because `Decimal.normalize()` uses the ambient 28-digit context. Rendering
+  is now exact and context-independent.
+- **CSV:** a file cut off inside a quoted field (a paused or crashed writer)
+  could parse into a plausible total. CSV is now parsed strictly, and a row
+  with the wrong number of cells refuses the load instead of counting as
+  blanks.
+- **Grouping:** a real value named `(missing)` merged with rows that have no
+  value. This is now refused by name.
+- **Reviews are authenticated:** every tool's approval is signed with the
+  reviewer's own key over the spec, table, readback and answer. The runtime
+  refuses tools with no valid reviewer attestation. The public release trusts
+  only the demo reviewer, and kits carry their own reviewers.
+- **Installer:** the `curl … | bash` line is withdrawn, because it ran
+  mutable branch content before any verification. `install.sh` is now a
+  release asset covered by the signed `SHA256SUMS`: verify it, then run it.
+- **Export tooling** (Perslis side): stages and verifies the release before
+  touching the destination, refuses unsafe destinations and archive paths.
+
 ## 1.1.0 — 2026-09-26 · PILOT
 
 **Vocabulary**

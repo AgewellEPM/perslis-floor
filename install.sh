@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 # Install Perslis Floor: download the signed release, verify it, unpack it, run the demo.
 #
-#   curl -fsSL https://raw.githubusercontent.com/AgewellEPM/perslis-floor/main/install.sh | bash
+# Verify THIS script before running it — it is a release asset listed in the
+# signed SHA256SUMS (see the README: download install.sh + SHA256SUMS(.sig),
+# ssh-keygen -Y verify, check install.sh's line, then `bash install.sh`).
+# Don't pipe it from a branch: a branch can change; the signature can't be faked.
 #
 # Refuses to install unless SHA256SUMS carries a valid signature from the
 # Perslis release key below AND the zip matches it. Installs into
 # ~/perslis-floor (override with PERSLIS_FLOOR_HOME); never overwrites.
-# The same key is published at https://perslis.com/perslis-floor.html —
+# The same key is published at https://perslis.com/perslis-floor —
 # compare the two if you want a second channel.
 set -euo pipefail
 
 REPO="AgewellEPM/perslis-floor"
-VERSION="${PERSLIS_FLOOR_VERSION:-1.1.0}"
+VERSION="${PERSLIS_FLOOR_VERSION:-1.1.1}"
 DEST="${PERSLIS_FLOOR_HOME:-$HOME/perslis-floor}"
 SIGNER='releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd'
 # A mirror may serve the files; the signature check below still decides.
@@ -43,15 +46,17 @@ ssh-keygen -Y verify -f "$WORK/perslis_signers" -I releases@perslis.com \
   || fail "signature check FAILED — this is not a Perslis release. Nothing was installed."
 
 say "▸ Verifying the checksum"
+grep " $ZIP\$" "$WORK/SHA256SUMS" > "$WORK/zip.sum" || fail "SHA256SUMS does not list $ZIP"
 if command -v shasum >/dev/null 2>&1; then
-  (cd "$WORK" && shasum -a 256 -c SHA256SUMS >/dev/null) || fail "checksum FAILED"
+  (cd "$WORK" && shasum -a 256 -c zip.sum >/dev/null) || fail "checksum FAILED"
 else
-  (cd "$WORK" && sha256sum -c SHA256SUMS >/dev/null) || fail "checksum FAILED"
+  (cd "$WORK" && sha256sum -c zip.sum >/dev/null) || fail "checksum FAILED"
 fi
 
 say "▸ Installing to $DEST"
-(cd "$WORK" && unzip -q "$ZIP")
-mv "$WORK/perslis-floor-$VERSION" "$DEST"
+(cd "$WORK" && unzip -q "$ZIP") || fail "could not unpack $ZIP"
+mkdir -p "$(dirname "$DEST")" || fail "could not create $(dirname "$DEST")"
+mv "$WORK/perslis-floor-$VERSION" "$DEST" || fail "could not move the release into $DEST"
 
 say "▸ Running the demo"
 python3 "$DEST/floor-serve.py" --data "$DEST/demo/data" --tools "$DEST/demo/tools" --check
