@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.1.2 — 2026-09-26 · PILOT (security)
+
+Found by a further adversarial review; each is pinned by a regression test.
+
+- **Reviewer identity is bound to the key.** Each reviewer key id maps to one
+  enrolled display name in a pinned registry. An approval signed by one
+  person's key in another person's name is refused. Creating a key no longer
+  enrolls it: enrollment is an explicit, reviewable edit.
+- **One malformed tool file no longer takes the server down.** It is refused
+  by name, and the other tools are still served.
+- **Duplicate JSON keys are refused** (`{"amount": 10, "amount": 999}` used
+  to read as 999), in data files and in tool files.
+- **Export tooling** (Perslis side): updates go through git (commit, then a
+  two-tree fast-forward). Untracked files are never touched, replaced files
+  stay in history, and a folder that isn't a clean previous export is refused.
+
 ## 1.1.1 — 2026-09-26 · PILOT (security and correctness)
 
 Found by an adversarial review of 1.1.0; each is pinned by a regression test.

@@ -15,10 +15,10 @@
       "2026-08": 7,
       "2026-09": 5
     },
-    "at": "2026-09-27T00:46:44+00:00",
+    "at": "2026-09-27T01:13:01+00:00",
     "attestation": {
       "reviewer": "perslis-demo",
-      "sig": "1db6f702b1b1ea6a1588db57066583d78a29ca84a847c73cf86735d10addc5dc45bc6ddee62581823156426e0a2ffa37ccbfd5dca79f3355d5c4e465ab69470e"
+      "sig": "4cada2226a4e36e982d0c66f181c2b680ccad5658dd8483812d1632c657b30f91009f7140ba881e946eb92e1522eae97521738fe3fe1f7761036e45a8b0f5504"
     },
     "by": "Perslis (demo)",
     "evidence_sha256": "9133d6c78771f904b88c131063c616c7960c893fa6f08c4a1d2a2f9114ddbe2d",
@@ -27,7 +27,7 @@
     "spec_sha256": "f2ce07133dafe5e15cf0d5b835f64abddbaf246dab86bb0fa74ed10b91f1a522",
     "warnings_acknowledged": []
   },
-  "sig": "469dfe70a2b0f8d8a55168f5e03b747a27ac217b403e0150552183c43a6b8854e67bd3cd0145b466991c75d8784b05ce0c75f3416242354f50535a73ffef670c",
+  "sig": "d49e847d7c37ae8bd86a31e04c42d234d66cfcb3da7450e00a2a622ea5b190ecbf932ba7355c1d4398852523e2817e88662b4c178eeaed54417d2b1bb7038304",
   "spec": {
     "pipeline": [
       {

@@ -11,11 +11,14 @@ TRUSTED: dict[str, str] = {
         "e4a2225d46e9afaa196714079e8596c3d7323b7633730fe8e0069a86f98835c5",
 }
 
-# Reviewers whose signed approvals this runtime accepts. The public release
-# ships only the demo reviewer; founder kits carry the reviewers of their tools.
-REVIEWERS: dict[str, str] = {
+# Reviewers whose signed approvals this runtime accepts: key id -> the ONE display
+# name that key may sign as. The public release ships only the demo reviewer;
+# founder kits carry the reviewers of their own tools.
+REVIEWERS: dict[str, dict] = {
     # Machine review of the public demo: every demo answer was checked against an
     # independently computed expected answer before this key signed the approval.
-    "perslis-demo":
-        "38e23d6e325c9ce411effcf949c9967ff2bd47befb8e216b85aa05267e6b5187",
+    "perslis-demo": {
+        "name": "Perslis (demo)",
+        "key": "38e23d6e325c9ce411effcf949c9967ff2bd47befb8e216b85aa05267e6b5187",
+    },
 }

@@ -12,7 +12,7 @@ can't support an exact answer, it **refuses rather than guessing**.
 ![Dependencies](https://img.shields.io/badge/dependencies-none%20%C2%B7%20stdlib-79c0a0)
 ![Network](https://img.shields.io/badge/network-none-555)
 ![MCP](https://img.shields.io/badge/MCP-stdio-8a63d2)
-![Status](https://img.shields.io/badge/status-1.1.1%20%C2%B7%20pilot-e0a800)
+![Status](https://img.shields.io/badge/status-1.1.2%20%C2%B7%20pilot-e0a800)
 
 English · [中文](README.zh.md)
 
@@ -28,7 +28,7 @@ Perslis release key, then runs the installer. The installer fetches the zip,
 verifies it again, unpacks it to `~/perslis-floor` and runs the demo:
 
 ```bash
-V=1.1.1; B=https://github.com/AgewellEPM/perslis-floor/releases/download/v$V
+V=1.1.2; B=https://github.com/AgewellEPM/perslis-floor/releases/download/v$V
 curl -fsSL -O "$B/install.sh" -O "$B/SHA256SUMS" -O "$B/SHA256SUMS.sig"
 echo 'releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd' > perslis_signers
 ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
@@ -39,14 +39,14 @@ bash install.sh
 We don't publish a `curl … | bash` line. Piping a script from a branch runs
 whatever is on that branch before anything has been verified.
 
-**Or by hand.** Download `perslis-floor-1.1.1.zip`, `SHA256SUMS` and
+**Or by hand.** Download `perslis-floor-1.1.2.zip`, `SHA256SUMS` and
 `SHA256SUMS.sig` from the [latest release](https://github.com/AgewellEPM/perslis-floor/releases/latest),
 verify, then unzip:
 
 ```bash
 ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
-grep ' perslis-floor-1.1.1.zip$' SHA256SUMS | shasum -a 256 -c -
-unzip perslis-floor-1.1.1.zip && cd perslis-floor-1.1.1
+grep ' perslis-floor-1.1.2.zip$' SHA256SUMS | shasum -a 256 -c -
+unzip perslis-floor-1.1.2.zip && cd perslis-floor-1.1.2
 ```
 
 That release key is also published at
@@ -173,7 +173,7 @@ nothing left to re-examine it. In the current pilot the flow is:
 
 ## Status
 
-**PILOT, version 1.1.1.** It's tested end to end, including a real MCP client
+**PILOT, version 1.1.2.** It's tested end to end, including a real MCP client
 calling a built kit, on Python 3.9 (the macOS default) and 3.13. Measured on an
 M-series laptop at 500k rows (an 18 MB CSV): about 1.3 s to load, about 400 MB
 of RAM, and about 2.3 s for the first query after the data changes. Repeat

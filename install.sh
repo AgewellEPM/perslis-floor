@@ -14,7 +14,7 @@
 set -euo pipefail
 
 REPO="AgewellEPM/perslis-floor"
-VERSION="${PERSLIS_FLOOR_VERSION:-1.1.1}"
+VERSION="${PERSLIS_FLOOR_VERSION:-1.1.2}"
 DEST="${PERSLIS_FLOOR_HOME:-$HOME/perslis-floor}"
 SIGNER='releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd'
 # A mirror may serve the files; the signature check below still decides.

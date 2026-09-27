@@ -31,14 +31,27 @@ def canonical(envelope: dict) -> bytes:
     return json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def _qc(envelope) -> str:
+    spec = envelope.get("spec") if isinstance(envelope, dict) else None
+    return str(spec.get("question_class", "?")) if isinstance(spec, dict) else "?"
+
+
 def require(envelope: dict, trusted: dict | None = None) -> dict:
-    """Return the envelope if its signature checks out; raise otherwise."""
+    """Return the envelope if its signature checks out; raise otherwise.
+    A malformed file is a SignatureError (refused by name), never a crash."""
     keys = TRUSTED if trusted is None else trusted
-    qc = (envelope.get("spec") or {}).get("question_class", "?")
+    if not isinstance(envelope, dict):
+        raise SignatureError(f"not a signed spec (top level is {type(envelope).__name__})")
+    if not isinstance(envelope.get("spec"), dict) or not isinstance(envelope.get("table"), str):
+        raise SignatureError(f"'{_qc(envelope)}': malformed envelope (spec must be an object, "
+                             f"table a string)")
+    qc = _qc(envelope)
     if envelope.get("format") != FORMAT:
         raise SignatureError(f"'{qc}': not a signed spec (format "
                              f"{envelope.get('format')!r}, expected {FORMAT!r})")
     kid, sig = envelope.get("kid"), envelope.get("sig")
+    if not isinstance(kid, str) or not isinstance(sig, str):
+        raise SignatureError(f"'{qc}': malformed signature fields")
     pub = keys.get(kid)
     if pub is None:
         raise SignatureError(f"'{qc}': signed by unknown key {kid!r}")
@@ -80,10 +93,13 @@ def review_payload(review: dict) -> bytes:
 
 
 def require_review(envelope: dict, reviewers: dict | None = None) -> dict:
-    """The envelope's review, if an enrolled reviewer really signed it; raise otherwise."""
-    keys = REVIEWERS if reviewers is None else reviewers
-    qc = (envelope.get("spec") or {}).get("question_class", "?")
-    review = envelope.get("review")
+    """The envelope's review, if an ENROLLED reviewer really signed it; raise otherwise.
+
+    `reviewers` maps key id -> {"name": ..., "key": ...}: a pinned registry, so a
+    key enrolled for one person cannot sign an approval in another's name."""
+    registry = REVIEWERS if reviewers is None else reviewers
+    qc = _qc(envelope)
+    review = envelope.get("review") if isinstance(envelope, dict) else None
     if not isinstance(review, dict):
         raise SignatureError(f"'{qc}': no reviewer attestation — every tool needs a "
                              f"person's signed approval")
@@ -92,13 +108,17 @@ def require_review(envelope: dict, reviewers: dict | None = None) -> dict:
         raise SignatureError(f"'{qc}': review record incomplete (missing {missing})")
     att = review["attestation"]
     rid = att.get("reviewer") if isinstance(att, dict) else None
-    pub = keys.get(rid)
-    if pub is None:
-        raise SignatureError(f"'{qc}': reviewed with an unknown reviewer key {rid!r}")
+    entry = registry.get(rid) if isinstance(rid, str) else None
+    if not (isinstance(entry, dict) and isinstance(entry.get("key"), str)
+            and isinstance(entry.get("name"), str)):
+        raise SignatureError(f"'{qc}': reviewed with a key that is not enrolled ({rid!r})")
+    if review.get("by") != entry["name"]:
+        raise SignatureError(f"'{qc}': the review says it is by {review.get('by')!r}, but it "
+                             f"was signed with the key enrolled for {entry['name']!r}")
     try:
-        ok = ed25519.verify(bytes.fromhex(pub), review_payload(review),
+        ok = ed25519.verify(bytes.fromhex(entry["key"]), review_payload(review),
                             bytes.fromhex(att.get("sig") or ""))
-    except ValueError:
+    except (ValueError, TypeError):
         ok = False
     if not ok:
         raise SignatureError(f"'{qc}': reviewer attestation does not match — the review "

@@ -36,6 +36,29 @@ class LoadError(ValueError):
     """The evidence could not be read whole. Nothing partial is served."""
 
 
+def _no_duplicate_keys(pairs):
+    """object_pairs_hook: a JSON object with a repeated key is corrupt, not
+    'last one wins' — {"amount": 10, "amount": 999} must not read as 999."""
+    out = {}
+    for k, v in pairs:
+        if k in out:
+            raise LoadError(f"duplicate key {k!r} in a JSON object")
+        out[k] = v
+    return out
+
+
+def strict_json(text: str):
+    """EVIDENCE: json.loads with exact decimals and no duplicate keys, at every depth."""
+    return json.loads(text, parse_float=Decimal, object_pairs_hook=_no_duplicate_keys)
+
+
+def signed_json(text: str):
+    """SIGNED FILES (tool envelopes): no duplicate keys, but numbers parsed exactly
+    as they were when signed (plain JSON floats), so the canonical bytes — and the
+    signature — round-trip."""
+    return json.loads(text, object_pairs_hook=_no_duplicate_keys)
+
+
 def _csv_rows(path: Path) -> list:
     with path.open(newline="", encoding="utf-8-sig") as fh:
         head = fh.readline()
@@ -80,7 +103,9 @@ def _jsonl_rows(path: Path) -> list:
             if not line.strip():
                 continue
             try:
-                row = json.loads(line, parse_float=Decimal)
+                row = strict_json(line)
+            except LoadError as exc:
+                raise LoadError(f"{path.name}: line {n}: {exc}") from None
             except ValueError as exc:
                 raise LoadError(f"{path.name}: line {n} is not JSON ({exc})") from None
             if not isinstance(row, dict):
@@ -99,7 +124,9 @@ def _require_rows(path: Path, table: str, rows: list) -> list:
 
 def _json_tables(path: Path) -> dict:
     try:
-        blob = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
+        blob = strict_json(path.read_text(encoding="utf-8"))
+    except LoadError as exc:
+        raise LoadError(f"{path.name}: {exc}") from None
     except ValueError as exc:
         raise LoadError(f"{path.name}: not JSON ({exc})") from None
     if isinstance(blob, list):

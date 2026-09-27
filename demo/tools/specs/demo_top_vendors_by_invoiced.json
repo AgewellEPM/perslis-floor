@@ -18,10 +18,10 @@
         18941.9
       ]
     ],
-    "at": "2026-09-27T00:46:44+00:00",
+    "at": "2026-09-27T01:13:01+00:00",
     "attestation": {
       "reviewer": "perslis-demo",
-      "sig": "c216ed07d3b097f9a5ca13dc43daab777872ec9efa3e04d7a56a8ff2fde84dda865ba437f7f722e94a4b13a94ff7795edc3d8b4d580377c61ab3908952a31705"
+      "sig": "9852057efa5681b29c5a46bcbfef1d629daa40789148f20d77f96588034192c7f804f7c974cf5bc80d733c5cd40321738bb68388d82f3252c7352ff6d23b430b"
     },
     "by": "Perslis (demo)",
     "evidence_sha256": "0ec85e5014e91d003ed93530d0f7cc5de3ec69fa67f50e86c05afa41acbaeb1f",
@@ -30,7 +30,7 @@
     "spec_sha256": "0aef4e5e84676e69a470f8c2fe35ae16556fea0b84e468e99d6b40c08d1bce29",
     "warnings_acknowledged": []
   },
-  "sig": "0bcfb55e1c9e407c8203b00e6903a22eb37545e7118e8fec9b0b55c5cec24c482757ebccb97760d7764c22ddf397e0349c5a9fa1f24548cf3f6eac846756e40a",
+  "sig": "350ece92df6a9e1843869b97604ccc3ae17700947d6544f0854e3a605adf969447d2d3e9499573d481259fae7bbc40d8211114526ed1f4f834047ce8adbbf10b",
   "spec": {
     "pipeline": [
       {

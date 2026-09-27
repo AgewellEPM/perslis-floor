@@ -7,4 +7,4 @@ execution: CSV/JSON/SQLite in, exact answers out, over MCP.
 
 Offline. No network. No model. No telemetry. Standard library only.
 """
-__version__ = "1.1.1"
+__version__ = "1.1.2"

@@ -18,7 +18,7 @@
 **经过验证的安装**：在签名核对通过之前，不运行任何代码。先下载安装脚本与签名的校验和，用 Perslis 发布密钥验证，再运行安装脚本；安装脚本会下载压缩包、再次验证、解压到 `~/perslis-floor` 并运行演示：
 
 ```bash
-V=1.1.1; B=https://github.com/AgewellEPM/perslis-floor/releases/download/v$V
+V=1.1.2; B=https://github.com/AgewellEPM/perslis-floor/releases/download/v$V
 curl -fsSL -O "$B/install.sh" -O "$B/SHA256SUMS" -O "$B/SHA256SUMS.sig"
 echo 'releases@perslis.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfmXcRm2o52skHrajOCntbGMwPIB13CWnzt/tRGxXxd' > perslis_signers
 ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
@@ -28,12 +28,12 @@ bash install.sh
 
 我们不提供 `curl … | bash` 形式的命令：从某个分支直接管道执行脚本，会在任何验证之前就运行该分支上的内容。
 
-**或手动安装**：从[最新发行版](https://github.com/AgewellEPM/perslis-floor/releases/latest)下载 `perslis-floor-1.1.1.zip`、`SHA256SUMS` 与 `SHA256SUMS.sig`，验证后再解压：
+**或手动安装**：从[最新发行版](https://github.com/AgewellEPM/perslis-floor/releases/latest)下载 `perslis-floor-1.1.2.zip`、`SHA256SUMS` 与 `SHA256SUMS.sig`，验证后再解压：
 
 ```bash
 ssh-keygen -Y verify -f perslis_signers -I releases@perslis.com -n perslis-release -s SHA256SUMS.sig < SHA256SUMS
-grep ' perslis-floor-1.1.1.zip$' SHA256SUMS | shasum -a 256 -c -
-unzip perslis-floor-1.1.1.zip && cd perslis-floor-1.1.1
+grep ' perslis-floor-1.1.2.zip$' SHA256SUMS | shasum -a 256 -c -
+unzip perslis-floor-1.1.2.zip && cd perslis-floor-1.1.2
 ```
 
 同一把发布公钥也公布在 [perslis.com/perslis-floor](https://perslis.com/perslis-floor.zh)。请对照两处：只出现在一个地方的密钥证明不了任何事。
@@ -88,7 +88,7 @@ Claude 调用工具，得到精确答案，以及生成它的计算流程：
 
 ## 状态
 
-**试点版 · 1.1.1。** 在 Python 3.9（macOS 默认版本）与 3.13 上端到端测试，包括真实 MCP 客户端调用构建好的工具包。
+**试点版 · 1.1.2。** 在 Python 3.9（macOS 默认版本）与 3.13 上端到端测试，包括真实 MCP 客户端调用构建好的工具包。
 在 M 系列笔记本上以 50 万行（18 MB CSV）实测：加载约 1.3 秒，内存约 400 MB，数据变化后的首次查询约 2.3 秒，重复查询即时返回。
 已知限制：不支持相对日期（“最近 30 天”）；不支持带参数的工具（每个问题一个工具）；数据在内存中处理，默认上限 100 万行；不直接连接数据库——请导出为 CSV 或 SQLite。
 

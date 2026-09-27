@@ -10,10 +10,10 @@
       "South": 4800.25,
       "West": 32996.02
     },
-    "at": "2026-09-27T00:46:44+00:00",
+    "at": "2026-09-27T01:13:01+00:00",
     "attestation": {
       "reviewer": "perslis-demo",
-      "sig": "dd10a8916b3336728037e5730522a5dc41e4bf6b1cd7d4228076382ba8fb0374f42e098ef9725318c7cefe6cfe29a56cacaa5bcf4864a518746d4923a8cbe507"
+      "sig": "103e0eff4685a2e376a56db13a919ac9e7afe734dc5bed98771602f2fe046685808b5ca795e68741b14a4f73ded44c61e51b05a809a51dcdfb20dd0f0d636005"
     },
     "by": "Perslis (demo)",
     "evidence_sha256": "0ec85e5014e91d003ed93530d0f7cc5de3ec69fa67f50e86c05afa41acbaeb1f",
@@ -22,7 +22,7 @@
     "spec_sha256": "d89f9a03c9cdf09fcea7cab8d5a7249463ce729ae4233aac145ade6691ecde84",
     "warnings_acknowledged": []
   },
-  "sig": "6439e9330a705c6fbbd21e2c93cdcda24c76b2fead68a026a6448e3c582369ecccb29cf3afdc59f92f5900a5b67a6fac50d75d20c5145fe2d89f366e2ff0c703",
+  "sig": "390512c26ee0cc01690a1a8356fbce26d5af8f6e54e1b0bfdfc6d44c334f8a41f68fc612eabda4b11b791f78fd8558578c1e5377abe1fa6e9e7d576085c83506",
   "spec": {
     "pipeline": [
       {

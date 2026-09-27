@@ -22,7 +22,7 @@ import time
 from pathlib import Path
 
 from . import __version__
-from .data import DataSource, LoadError
+from .data import DataSource, LoadError, signed_json
 from .journal import Journal
 from .explain import explain
 from .pipeline import DataError, PipelineError, describe, run, to_plain, validate
@@ -108,14 +108,16 @@ def load_tools(tools_dir, trusted: dict | None = None,
         return tools, [f"no specs directory at {d}"]
     for path in sorted(d.glob("*.json")):
         try:
-            envelope = require(json.loads(path.read_text()), trusted)
+            envelope = require(signed_json(path.read_text(encoding="utf-8")), trusted)
             require_review(envelope, reviewers)
             tool = Tool(envelope)
             if tool.name in seen:
                 raise PipelineError(f"duplicate tool name {tool.name}")
             seen.add(tool.name)
             tools.append(tool)
-        except (ValueError, KeyError, TypeError, SignatureError, PipelineError) as exc:
+        except (ValueError, KeyError, TypeError, AttributeError, OSError,
+                SignatureError, PipelineError) as exc:
+            # One bad file is refused by name; the rest are still served.
             refused.append(f"{path.name}: {type(exc).__name__}: {exc}")
     return tools, refused
 
